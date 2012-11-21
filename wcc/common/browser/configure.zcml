@@ -6,7 +6,6 @@
         manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
         class=".viewlets.LogoViewlet"
         permission="zope2.View"
-        layer="..interfaces.IProductSpecific"
         />
 
 </configure>

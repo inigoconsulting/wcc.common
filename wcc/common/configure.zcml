@@ -12,7 +12,7 @@
     <includeDependencies package="." />
     <grok:grok package="." />
     <include package='.browser'/>
-
+    <!--
     <genericsetup:registerProfile
         name="default"
         title="WCC Common"
@@ -20,5 +20,5 @@
         description='Common code for all WCC sites'
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
-
+    -->
 </configure>
