@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<atcttool
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+    <topic_indexes>
+        <index name="countries"
+            description="Countries index"
+            enabled="True"
+            friendlyName="Countries"/>
+    </topic_indexes>
+    <topic_metadata>
+        <metadata name="countries"
+            description=""
+            enabled="True"
+            friendlyName="Countries"/>
+    </topic_metadata>
+</atcttool>

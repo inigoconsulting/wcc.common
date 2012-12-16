@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:grok="http://namespaces.zope.org/grok"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="wcc.common">
+
+    <plone:behavior
+        title="WCC Location Tags"
+        description="Adds region and country tagging"
+        provides=".location.ILocationTags"
+        factory=".location.ILocationTags"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        marker=".location.ILocationTags"
+        />
+
+</configure>
