@@ -54,3 +54,21 @@ def _patch_catalogcontentlisting_titleid():
     CatalogContentListingObject.pretty_title_or_id = pretty_title_or_id
 
 _patch_catalogcontentlisting_titleid()
+
+
+def _patch_collectiveinterface_reindex():
+    from collective.interfaces.browser import InterfacesView
+
+    if getattr(InterfacesView, '__inigo_collectiveinterfaces_reindex_patched',
+            False):
+        retrurn 
+
+    _orig_call = InterfacesView.__call__
+    def __call__(self):
+        _orig_call(self)
+        self.context.reindexObject(['object_provides'])
+
+    InterfacesView.__call__ = __call__
+    InterfacesView.__inigo_collectiveinterfaces_reindex_patched = True
+
+_patch_collectiveinterface_reindex()

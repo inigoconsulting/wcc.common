@@ -34,6 +34,7 @@ setup(name='wcc.common',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'collective.interfaces'
           # -*- Extra requirements: -*-
       ],
       entry_points="""

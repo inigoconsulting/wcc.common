@@ -10,5 +10,6 @@
     <img src="logo.jpg" alt=""
         tal:replace="structure view/logo_tag" />
 </a>
-    <div style="font-size:12px;margin-top:10px;width:435px;" tal:content="view/navigation_root_description"></div>
+<div class="logo-description"
+    style="font-size:12px;margin-top:10px;width:435px;" tal:content="view/navigation_root_description"></div>
 </div>
