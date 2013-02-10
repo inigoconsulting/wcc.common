@@ -4,7 +4,7 @@ Changelog
 1.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added monkeypatch which set blobleadimage to be language independent
 
 
 1.2 (2013-02-07)

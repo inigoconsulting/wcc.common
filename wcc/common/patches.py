@@ -56,6 +56,7 @@ def _patch_catalogcontentlisting_titleid():
 _patch_catalogcontentlisting_titleid()
 
 
+
 def _patch_collectiveinterface_reindex():
     from collective.interfaces.browser import InterfacesView
 
@@ -72,3 +73,17 @@ def _patch_collectiveinterface_reindex():
     InterfacesView.__inigo_collectiveinterfaces_reindex_patched = True
 
 _patch_collectiveinterface_reindex()
+
+
+def _patch_collectivecontentleadimageblob_languageindependent():
+    try:
+        from collective.contentleadimage.extender import HAS_BLOB
+        from collective.contentleadimage.extender import LeadImageBlobExtender
+    except:
+        return
+
+    for f in LeadImageBlobExtender.fields:
+        if f.__name__ == 'leadImage':
+            f.languageIndependent = True
+
+_patch_collectivecontentleadimageblob_languageindependent()
