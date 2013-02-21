@@ -87,3 +87,23 @@ def _patch_collectivecontentleadimageblob_languageindependent():
             f.languageIndependent = True
 
 _patch_collectivecontentleadimageblob_languageindependent()
+
+
+def _patch_multilingual_catalog_singlelang():
+    from plone.app.multilingual import catalog
+
+    if getattr(catalog, '__inigo_patched_singlelang', False):
+        return
+
+    _orig_language_filter = catalog.language_filter
+    def language_filter(query):
+        old_path = query.get('path', None)
+        if isinstance(old_path, dict) and 'query' in old_path:
+            if not old_path['query']:
+                query['Language'] = 'all'
+        return _orig_language_filter(query)
+
+    catalog.language_filter = language_filter
+    catalog.__inigo_patched_singlelang = True
+
+_patch_multilingual_catalog_singlelang()
