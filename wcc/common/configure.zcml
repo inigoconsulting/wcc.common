@@ -21,4 +21,17 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <subscriber for="plone.multilingual.events.ObjectTranslatedEvent"
+        handler=".subscriber.set_default_translation"/>
+
+    <adapter factory=".multilingual.ArchetypesLanguageDependentFieldsManager"
+        for="archetypes.multilingual.interfaces.IArchetypesTranslatable"
+        provides=".interfaces.ILanguageDependentFieldsManager"
+        />
+
+    <adapter factory=".multilingual.DexterityLanguageDependentFieldsManager"
+        for="plone.multilingualbehavior.interfaces.IDexterityTranslatable"
+        provides=".interfaces.ILanguageDependentFieldsManager"
+        />
+
 </configure>
