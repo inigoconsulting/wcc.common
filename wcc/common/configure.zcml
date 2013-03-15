@@ -11,7 +11,6 @@
 
     <includeDependencies package="." />
     <grok:grok package="." />
-    <include package='.browser'/>
     <include package='.behavior'/>
 
     <genericsetup:registerProfile
