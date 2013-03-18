@@ -39,6 +39,11 @@ class LocationTagsExtender(grok.Adapter):
     def getFields(self):
         return self.fields
 
+    def getOrder(self, schematas):
+        # you may reorder the fields in the schemata here
+        return schematas
+
+
 
 class NewsLocationTagsExtender(LocationTagsExtender):
     grok.context(IATNewsItem)
