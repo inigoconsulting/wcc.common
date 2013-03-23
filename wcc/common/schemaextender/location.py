@@ -22,6 +22,7 @@ class LocationTagsExtender(grok.Adapter):
     grok.implements(IOrderableSchemaExtender, IBrowserLayerAwareExtender)
     grok.provides(IOrderableSchemaExtender)
     grok.baseclass()
+    grok.name('wcc.location.locationtags')
 
     fields = [
         ExtensionLinesField('countries',
