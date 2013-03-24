@@ -99,7 +99,8 @@ def _patch_multilingual_catalog_singlelang():
     def language_filter(query):
         old_path = query.get('path', None)
         if isinstance(old_path, dict) and 'query' in old_path:
-            if not old_path['query']:
+            if not old_path['query'] or (
+                    isinstance(old_path['query'], list)):
                 query['Language'] = 'all'
         return _orig_language_filter(query)
 
@@ -107,3 +108,27 @@ def _patch_multilingual_catalog_singlelang():
     catalog.__inigo_patched_singlelang = True
 
 _patch_multilingual_catalog_singlelang()
+
+# XXX only required for accessing manage_components
+#
+#def _patch_genericsetup_get_dotted_name():
+#    from Products.GenericSetup import utils
+#
+#    if getattr(utils, '__inigo_patched', False):
+#        return
+#
+#    _orig_getDottedName = utils._getDottedName
+#    def _getDottedName(named):
+#        if isinstance(named, basestring):
+#            return str(named)
+#
+#        _marker = []
+#        if getattr(named, '__name__', _marker) is _marker:
+#            named.__name__ = ''
+#
+#        return _orig_getDottedName(named)
+#
+#    utils._getDottedName = _getDottedName
+#    utils.__inigo_patched = True
+#
+#_patch_genericsetup_get_dotted_name()
