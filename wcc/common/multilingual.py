@@ -38,7 +38,7 @@ class DexterityLanguageDependentFieldsManager(object):
 
         for schema in schemas:
             for field_name in schema:
-                if field_name in ['language', 'creators']:
+                if field_name in ['language', 'creators', 'id']:
                     continue
                 if not ILanguageIndependentField.providedBy(schema[field_name]):
                     value = getattr(schema(self.context), field_name, _marker)
@@ -81,7 +81,7 @@ class ArchetypesLanguageDependentFieldsManager(object):
         fields = schema.filterFields(languageIndependent=False)
         fields_to_copy = [x for x in fields if x.getName() in dest_schema]
         fields_to_copy = [x for x in fields if x.getName() not in ['language',
-                            'creators']]
+                            'creators', 'id']]
         for field in fields_to_copy:
             self._copy_field(field, translation)
     
