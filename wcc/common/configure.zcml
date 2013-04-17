@@ -21,4 +21,14 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <subscriber 
+        for="Products.ATContentTypes.interfaces.event.IATEvent
+            zope.lifecycleevent.IObjectModifiedEvent"
+            handler=".subscribers.purge_homepage"/>
+
+    <subscriber 
+        for="Products.ATContentTypes.interfaces.news.IATNewsItem
+            zope.lifecycleevent.IObjectModifiedEvent"
+        handler=".subscribers.purge_homepage"/>
+
 </configure>
