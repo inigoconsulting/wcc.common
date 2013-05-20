@@ -17,9 +17,39 @@ def notify_edit_by_nonmanager(obj, event):
 
     message = '''From: "%(email_from_name)s" <%(email_from_address)s>
 To: "Web Editor" <webeditor@wcc-coe.org>
-Subject: Content edited at %(url)s
+Subject: Content edited
 
 %(url)s has been edited. Please review.
+    '''
+
+    encoding = site.getProperty('email_charset', 'utf-8')
+    mail_text = message % {
+        'url': obj.absolute_url(),
+        'email_from_name': site.email_from_name,
+        'email_from_address': site.email_from_address,
+    }
+
+    message_obj = message_from_string(mail_text)
+
+    mTo = message_obj['To']
+    mFrom = message_obj['From']
+    subject = message_obj['Subject']
+
+    site.MailHost.send(mail_text, mTo, mFrom, subject=subject,
+                        charset=encoding)
+
+def notify_content_submitted_for_publication(obj, event):
+
+    if event.action != 'submit':
+        return
+
+    site = getSite()
+
+    message = '''From: "%(email_from_name)s" <%(email_from_address)s>
+To: "Web Editor" <webeditor@wcc-coe.org>
+Subject: Content submitted for publication
+
+New content has been submitted for publication. Please review %(url)s
     '''
 
     encoding = site.getProperty('email_charset', 'utf-8')
