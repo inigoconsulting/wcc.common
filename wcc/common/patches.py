@@ -1,5 +1,7 @@
-from logging import getLogger
-logger = getLogger('wcc.policy.patches')
+import logging
+logger = logging.getLogger('wcc.policy.patches')
+requests_log = logging.getLogger("requests")
+requests_log.setLevel(logging.WARN)
 
 def _patch_dont_compress_types():
     from ZPublisher.HTTPResponse import HTTPResponse
