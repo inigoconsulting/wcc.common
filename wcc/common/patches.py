@@ -90,6 +90,17 @@ def _patch_multilingual_catalog_singlelang():
 
 _patch_multilingual_catalog_singlelang()
 
+
+def _patch_galleria_default_height():
+    try:
+        from collective.ptg.galleria import IGalleriaDisplaySettings
+    except ImportError:
+        return
+
+    IGalleriaDisplaySettings['galleria_height'].default = 600
+
+_patch_galleria_default_height()
+
 # XXX only required for accessing manage_components
 #
 #def _patch_genericsetup_get_dotted_name():
