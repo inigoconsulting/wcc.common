@@ -195,6 +195,9 @@ def _patch_improve_similar_items_relevance():
             # Prevent parens being interpreted
             element=element.replace('(', '"("')
             element=element.replace(')', '")"')
+            # remove .html extensions
+            element=element.replace('.html','')
+            element=element.replace('.htm','')
             # wildcard the title search
             element=element.replace('-', '* *')
             element='*%s*' % element
@@ -215,6 +218,9 @@ def _patch_improve_similar_items_relevance():
             # Prevent parens being interpreted
             element=element.replace('(', '"("')
             element=element.replace(')', '")"')
+            # remove .html extensions
+            element=element.replace('.html','')
+            element=element.replace('.htm','')
             element=element.lower()
             if element not in ignore_ids:
                 try:
