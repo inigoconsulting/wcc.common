@@ -101,6 +101,66 @@ def _patch_galleria_default_height():
 
 _patch_galleria_default_height()
 
+
+def _patch_improve_search_relevance():
+    # this patch makes contents which search string exist in title as higher
+    # relevance
+
+    from plone.app.search.browser import Search
+    from plone.app.contentlisting.interfaces import IContentListing
+    from Products.CMFPlone.PloneBatch import Batch
+
+    if getattr(Search, '__inigo_relevance_patched', False):
+        return 
+
+    _orig_results = Search.results
+    def results(self, query=None, batch=True, b_size=10, b_start=0):
+        results = _orig_results(self, query, batch, b_size, b_start)
+        if not results:
+            return results
+
+        if query is None:
+            query = {}
+
+        query = self.filter_query(query)
+
+        if not 'SearchableText' in query:
+            return results
+
+        if query.get('sort_on', ''):
+            return results
+
+        if batch:
+            items = results._sequence._basesequence
+        else:
+            items = results._basesequence
+
+        searchtext = query.get('SearchableText', '').lower().strip()
+        searchterms = searchtext.split()
+        def sortkey(x):
+            title = x.Title.lower().strip()
+            if title == searchtext:
+                return 999
+            if searchtext in title:
+                return 900
+            score = 0
+            for term in searchterms:
+                if term in title:
+                    score += 1
+            return score
+
+        items = list(reversed(sorted(items, key=sortkey)))
+
+        results = IContentListing(items)
+        if batch:
+            results = Batch(results, b_size, b_start)
+        return results
+
+    Search.results = results
+    Search.__inigo_relevance_patched = True
+
+_patch_improve_search_relevance()
+
 # XXX only required for accessing manage_components
 #
 #def _patch_genericsetup_get_dotted_name():
