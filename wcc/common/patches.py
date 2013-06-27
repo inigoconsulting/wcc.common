@@ -198,6 +198,7 @@ def _patch_improve_similar_items_relevance():
             # wildcard the title search
             element=element.replace('-', '* *')
             element='*%s*' % element
+            element = element.lower()
             if element not in ignore_ids:
                 try:
                     result_set = portal_catalog(Title=element,
@@ -214,6 +215,7 @@ def _patch_improve_similar_items_relevance():
             # Prevent parens being interpreted
             element=element.replace('(', '"("')
             element=element.replace(')', '")"')
+            element=element.lower()
             if element not in ignore_ids:
                 try:
                     result_set = portal_catalog(SearchableText=element,
