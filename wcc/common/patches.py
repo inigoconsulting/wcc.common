@@ -101,6 +101,20 @@ def _patch_galleria_default_height():
 
 _patch_galleria_default_height()
 
+def relevance_sortkey_factory(searchtext):
+    searchterms = searchtext.split()
+    def sortkey(x):
+        title = x.Title.lower().strip()
+        if title == searchtext:
+            return 9999
+        if searchtext in title:
+            return 9000
+        score = 0
+        for term in searchterms:
+            if term in title:
+                score += len(term)
+        return score
+    return sortkey
 
 def _patch_improve_search_relevance():
     # this patch makes contents which search string exist in title as higher
@@ -136,20 +150,8 @@ def _patch_improve_search_relevance():
             items = results._basesequence
 
         searchtext = query.get('SearchableText', '').lower().strip()
-        searchterms = searchtext.split()
-        def sortkey(x):
-            title = x.Title.lower().strip()
-            if title == searchtext:
-                return 999
-            if searchtext in title:
-                return 900
-            score = 0
-            for term in searchterms:
-                if term in title:
-                    score += 1
-            return score
-
-        items = list(reversed(sorted(items, key=sortkey)))
+        sortkey = relevance_sortkey_factory(searchtext)
+        items = list(sorted(items, key=sortkey, reverse=True))
 
         results = IContentListing(items)
         if batch:
@@ -160,6 +162,77 @@ def _patch_improve_search_relevance():
     Search.__inigo_relevance_patched = True
 
 _patch_improve_search_relevance()
+
+def _patch_improve_similar_items_relevance():
+    # this patch makes 404 page list contents which url id exist in 
+    # title as higher relevance
+
+    from plone.app.redirector.browser import FourOhFourView
+    from plone.app.redirector.interfaces import IRedirectionPolicy
+    from zope.component import queryUtility, getMultiAdapter
+    from Products.CMFCore.utils import getToolByName
+    from Products.ZCTextIndex.ParseTree import QueryError, ParseError
+    from Acquisition import aq_base, aq_inner
+
+    if getattr(FourOhFourView,'__inigo_relevance_patched', False):
+        return 
+
+    def search_for_similar(self):
+        path_elements = self._path_elements()
+        if not path_elements:
+            return None
+        path_elements.reverse()
+
+        policy = IRedirectionPolicy(self.context)
+
+        ignore_ids = policy.ignore_ids
+
+        portal_catalog = getToolByName(self.context, "portal_catalog")
+        portal_state = getMultiAdapter((aq_inner(self.context), self.request),
+             name='plone_portal_state')
+        navroot = portal_state.navigation_root_path()
+        for element in path_elements:
+            # Prevent parens being interpreted
+            element=element.replace('(', '"("')
+            element=element.replace(')', '")"')
+            # wildcard the title search
+            element=element.replace('-', '* *')
+            element='*%s*' % element
+            if element not in ignore_ids:
+                try:
+                    result_set = portal_catalog(Title=element,
+                        path = navroot,
+                        portal_type=portal_state.friendly_types())
+                    if result_set:
+                        sortkey = relevance_sortkey_factory(element)
+                        return list(sorted(result_set, key=sortkey, reverse=True))[:10]
+                except (QueryError, ParseError):
+                    # ignore if the element can't be parsed as a text query
+                    pass
+
+        for element in path_elements:
+            # Prevent parens being interpreted
+            element=element.replace('(', '"("')
+            element=element.replace(')', '")"')
+            if element not in ignore_ids:
+                try:
+                    result_set = portal_catalog(SearchableText=element,
+                        path = navroot,
+                        portal_type=portal_state.friendly_types())
+                    if result_set:
+                        sortkey = relevance_sortkey_factory(element)
+                        return list(sorted(result_set, key=sortkey, reverse=True))[:10]
+                except (QueryError, ParseError):
+                    # ignore if the element can't be parsed as a text query
+                    pass
+
+        return []
+
+    FourOhFourView.search_for_similar = search_for_similar
+    FourOhFourView.__inigo_relevance_patched = True
+
+_patch_improve_similar_items_relevance()
+
 
 # XXX only required for accessing manage_components
 #
