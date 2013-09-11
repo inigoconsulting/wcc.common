@@ -242,6 +242,26 @@ def _patch_improve_similar_items_relevance():
 _patch_improve_similar_items_relevance()
 
 
+def _path_improve_autocomplete_search():
+
+    from plone.app.vocabularies import catalog
+
+    if getattr(catalog, '__inigo_patched', False):
+        return
+
+    _parse_query = catalog.parse_query
+    def parse_query(query, path_prefix=''):
+        q = _parse_query(query, path_prefix)
+        q['Title'] = q['SearchableText']
+        del q['SearchableText']
+        return q
+
+    catalog.parse_query = parse_query
+    catalog.__inigo_patched = True
+
+_path_improve_autocomplete_search()
+
+
 # XXX only required for accessing manage_components
 #
 #def _patch_genericsetup_get_dotted_name():
