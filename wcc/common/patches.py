@@ -252,8 +252,9 @@ def _path_improve_autocomplete_search():
     _parse_query = catalog.parse_query
     def parse_query(query, path_prefix=''):
         q = _parse_query(query, path_prefix)
-        q['Title'] = q['SearchableText']
-        del q['SearchableText']
+        if q.has_key('SearchableText'):
+            q['Title'] = q['SearchableText']
+            del q['SearchableText']
         return q
 
     catalog.parse_query = parse_query
