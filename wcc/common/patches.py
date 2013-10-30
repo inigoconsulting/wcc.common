@@ -263,6 +263,54 @@ def _path_improve_autocomplete_search():
 _path_improve_autocomplete_search()
 
 
+def _patch_rtvideo_include_youtube_param():
+
+    try:
+        from collective.rtvideo.youtube.browser import videoembedcode
+    except ImportError:
+        return
+
+    from urlparse import urlparse
+
+    if getattr(videoembedcode, '__inigo_patched', False):
+        return
+
+    _orig_getVideoLink = videoembedcode.ClassicYoutubeEmbedCode.getVideoLink
+    def getVideoLink(self):
+        link = _orig_getVideoLink(self)
+        qs = urlparse(self.context.getRemoteUrl())[4]
+        if qs and qs.strip():
+            params = qs.split('&')
+            newparams = ''
+            for param in params:
+                k, v = param.split('=')
+                if k not in ['v','list']:
+                    newparams += '&' + param
+            return '%s?%s' % (link, newparams)
+        return link
+
+    videoembedcode.ClassicYoutubeEmbedCode.getVideoLink = getVideoLink
+
+    _orig_getEmbedVideoLink = videoembedcode.ShortYoutubeEmbedCode.getEmbedVideoLink
+    def getEmbedVideoLink(self):
+        link = _orig_getEmbedVideoLink(self)
+        qs = urlparse(self.context.getRemoteUrl())[4]
+        if qs and qs.strip():
+            params = qs.split('&')
+            newparams = ''
+            for param in params:
+                k, v = param.split('=')
+                if k not in ['v', 'list']:
+                    newparams += '&' + param
+            return '%s?%s' % (link, newparams)
+        return link
+
+    videoembedcode.ShortYoutubeEmbedCode.getEmbedVideoLink = getEmbedVideoLink
+
+    videoembedcode.__inigo_patched = True
+
+_patch_rtvideo_include_youtube_param()
+
 # XXX only required for accessing manage_components
 #
 #def _patch_genericsetup_get_dotted_name():
