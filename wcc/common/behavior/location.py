@@ -10,9 +10,11 @@ from z3c.relationfield.schema import RelationChoice, RelationList
 from plone.formwidget.contenttree import ObjPathSourceBinder
 from collective.miscbehaviors.behavior.utils import context_property
 from wcc.common import MessageFactory as _
+from plone.multilingualbehavior.directives import languageindependent
 
 class ILocationTags(form.Schema):
 
+    languageindependent('countries')
     countries = schema.List(
         title=_(u"Related Countries"),
         value_type = schema.Choice(
@@ -34,5 +36,4 @@ class LocationTags(object):
     def __init__(self, context):
         self.context = context
 
-    regions = context_property('regions')
     countries = context_property('countries')    
