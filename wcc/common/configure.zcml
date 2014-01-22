@@ -21,7 +21,6 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
-    <!---
     <subscriber for="Products.CMFCore.interfaces.IContentish
         zope.lifecycleevent.interfaces.IObjectModifiedEvent"
         handler=".subscribers.notify_edit_by_nonmanager"/>
@@ -29,6 +28,5 @@
     <subscriber for="Products.CMFCore.interfaces.IContentish
         Products.CMFCore.interfaces.IActionSucceededEvent"
         handler=".subscribers.notify_content_submitted_for_publication"/>
-    -->
 
 </configure>
