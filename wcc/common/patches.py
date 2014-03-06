@@ -72,7 +72,6 @@ _patch_collectivecontentleadimageblob_languageindependent()
 
 def _patch_multilingual_catalog_singlelang():
     from plone.app.multilingual import catalog
-
     if getattr(catalog, '__inigo_patched_singlelang', False):
         return
 
@@ -88,7 +87,7 @@ def _patch_multilingual_catalog_singlelang():
     catalog.language_filter = language_filter
     catalog.__inigo_patched_singlelang = True
 
-_patch_multilingual_catalog_singlelang()
+#_patch_multilingual_catalog_singlelang()
 
 
 def _patch_galleria_default_height():
