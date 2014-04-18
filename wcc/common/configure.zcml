@@ -13,6 +13,7 @@
     <grok:grok package="." />
     <include package='.behavior'/>
 
+
     <genericsetup:registerProfile
         name="default"
         title="WCC Common"
@@ -28,5 +29,14 @@
     <subscriber for="Products.CMFCore.interfaces.IContentish
         Products.CMFCore.interfaces.IActionSucceededEvent"
         handler=".subscribers.notify_content_submitted_for_publication"/>
+
+    <browser:page
+          name="contactinfo-support-view"
+          for="plone.app.layout.navigation.interfaces.INavigationRoot"
+          class="collective.captchacontactinfo.browser.contactinfo_support_view.View"
+          permission="zope2.View"
+          allowed_interface="collective.captchacontactinfo.browser.interfaces.IContactinfoSupportView"
+          />
+
 
 </configure>
